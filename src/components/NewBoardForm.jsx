@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
+import './NewBoardForm.css';
+
 
 // Initial empty board object used to reset the form
 const NEW_BOARD = {
@@ -30,10 +32,10 @@ const NewBoardForm = ({ createNewBoard }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="new-board-form">
       <h2>Create a New Board</h2>
       <div>
-        <label htmlFor="add-title">Board Title:</label>
+        <label htmlFor="add-title">Title:</label>
         <input
           id="add-title"
           name="title"
@@ -45,7 +47,7 @@ const NewBoardForm = ({ createNewBoard }) => {
       </div>
       
       <div>
-        <label htmlFor="add-owner">Owner Name:</label>
+        <label htmlFor="add-owner">Owner's Name:</label>
         <input
           id="add-owner"
           name="owner"
@@ -56,7 +58,10 @@ const NewBoardForm = ({ createNewBoard }) => {
         />
       </div>
 
-      <input type="submit" value="Add Board" />
+      <div>
+        <label>Preview:</label>
+        <input type="submit" value="submit" />
+      </div>
     </form>
   );
 };
