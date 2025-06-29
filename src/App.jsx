@@ -1,35 +1,58 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useState, useEffect  } from 'react'
+import BoardList from './components/BoardList';
+import NewBoardForm from './components/NewBoardForm';
+import CardList from './components/CardList';
 import './App.css'
+import axios from 'axios';
+
+const BASE_URL = 'http://localhost:5000';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [boardsData, setBoardsData] = useState([]);  // State to hold all boards data
+  const [selectedBoard, setSelectedBoard] = useState(null);    //State to keep track of which board is currently selected
+  
+  // Fetch boards when the component mounts
+  useEffect(() => {
+    axios.get(`${BASE_URL}/boards`)
+      .then(response => setBoardsData(response.data))
+      .catch(error => console.error('Error fetching boards:', error));
+  }, []);
+
+  // Handle selecting a board
+  const handleBoardSelect = (board) => {
+    setSelectedBoard(board);
+  };
+
+  // Add a new board
+  const createNewBoard = (newBoard) => {
+    axios.post(`${BASE_URL}/boards`, newBoard)
+      .then(response => {
+        setBoardsData([...boardsData, response.data]);
+      })
+      .catch(error => console.error('Error creating board:', error));
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="App">
+      <header className="App-header">
+        <h1>Inspiration Board</h1>
+      </header>
+
+      <NewBoardForm createNewBoard={createNewBoard} />
+
+      {/* list of all boards and allow selecting one */}
+      <BoardList 
+        boards={boardsData} onBoardSelect={handleBoardSelect} 
+      />
+
+      {selectedBoard && (
+        <>
+          <h2>Selected Board: {selectedBoard.title}</h2>
+          <CardList board={selectedBoard} />
+        </>
+      )}
+    </div>
+  );
 }
 
 export default App
