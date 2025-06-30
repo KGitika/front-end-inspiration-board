@@ -3,6 +3,7 @@ import './BoardList.css';
 import PropTypes from 'prop-types';
 
 const BoardList = ({ boards, onBoardSelect }) => {
+  console.log(boards)
   return (
     <ol className="boards__list">
       {boards.map(board => (

@@ -14,7 +14,7 @@ function App() {
   // Fetch boards when the component mounts
   useEffect(() => {
     axios.get(`${BASE_URL}/boards`)
-      .then(response => setBoardsData(response.data))
+      .then(response => setBoardsData(response.data.boards))
       .catch(error => console.error('Error fetching boards:', error));
   }, []);
 
@@ -27,9 +27,25 @@ function App() {
   const createNewBoard = (newBoard) => {
     axios.post(`${BASE_URL}/boards`, newBoard)
       .then(response => {
-        setBoardsData([...boardsData, response.data]);
+        setBoardsData([...boardsData, response.data.board]);
       })
       .catch(error => console.error('Error creating board:', error));
+  };
+
+
+    const cardLike = (card_id) => {
+      //console.log("like",card_id);
+      axios.patch(`${BASE_URL}/cards/${card_id}/like`)
+        .then(response => {
+          //setBoardsData([...boardsData, response.data.board]);
+          console.log(response);
+          let updatedCard=response.data.card;
+          let board= boardsData.find((brd)=>brd.id==updatedCard.board_id);
+          let card=board.cards.find((crd)=>crd.id==updatedCard.id);
+          card.likes_count++;
+          setBoardsData([...boardsData]);
+        })
+        .catch(error => console.error('Error creating board:', error));      
   };
 
   return (
@@ -48,7 +64,7 @@ function App() {
       {selectedBoard && (
         <>
           <h2>Selected Board: {selectedBoard.title}</h2>
-          <CardList board={selectedBoard} />
+          <CardList cards={selectedBoard.cards} onLike={cardLike} />
         </>
       )}
     </div>
