@@ -1,7 +1,7 @@
 import Card from "./Card";
 
-const CardList = ({ cards, onLike }) => {
-    console.log(cards)
+const CardList = ({ cards, onLike }) => {    
+    if (!cards) return (<div className="card-list"></div>);
     return (
         <div className="card-list">
         {cards.map((card) => (

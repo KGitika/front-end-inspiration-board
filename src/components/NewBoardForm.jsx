@@ -11,6 +11,7 @@ const NEW_BOARD = {
 
 const NewBoardForm = ({ createNewBoard }) => {
   const [boardData, setBoardData] = useState(NEW_BOARD);  // State to store form input values
+  const [formVisible, setFormVisible] = useState(true);  // State to store form input values
 
   // Handle form submission
   const handleSubmit = (e) => {
@@ -31,7 +32,11 @@ const NewBoardForm = ({ createNewBoard }) => {
     setBoardData({ ...boardData, [e.target.name]: e.target.value });
   };
 
-  return (
+  function onShowHideBnt(){
+    setFormVisible(!formVisible);
+  }
+
+  let form=(
     <form onSubmit={handleSubmit} className="new-board-form">
       <h2>Create a New Board</h2>
       <div>
@@ -44,6 +49,7 @@ const NewBoardForm = ({ createNewBoard }) => {
           value={boardData.title}
           onChange={handleChange}
         />
+
       </div>
       
       <div>
@@ -64,6 +70,37 @@ const NewBoardForm = ({ createNewBoard }) => {
       </div>
     </form>
   );
+
+  let msg=(formVisible?"Hide New Board Form":"Show New Board Form");
+
+  let button= 
+    (
+      <div>
+        <input
+          type="button"
+          value={msg}
+          onClick={onShowHideBnt}
+        />
+      </div>
+    );
+
+    if (formVisible){
+      return (
+        <>
+          {form}
+          {button}
+        </>
+      );   
+    }else {
+      return (
+        <>
+          {button}
+        </>
+      )
+    }
+
+
+
 };
 
 NewBoardForm.propTypes = {
