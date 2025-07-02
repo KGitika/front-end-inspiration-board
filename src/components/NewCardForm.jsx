@@ -22,34 +22,30 @@ const NewCardForm = ({ createNewCard }) => {
   const isMessageEmpty = cardData.message.trim() === '';
 
   return (
-    <form onSubmit={handleSubmit} className="new-card-form">
+    <section className="new-card-form__container">
       <h2>Create a New Card</h2>
-
-      <div>
-        <label htmlFor="add-message">Message:</label>
+      <form onSubmit={handleSubmit} className="new-card-form__form">
+        <label htmlFor="add-message">Message</label>
         <input
           id="add-message"
           name="message"
           type="text"
+          className="invalid-form-input"
           placeholder="Enter card message"
           value={cardData.message}
           onChange={handleChange}
         />
-      </div>
 
-      <div>
-        <label>Preview:</label>
-        <p className="card-preview">{cardData.message}</p>
-      </div>
+        <p>Preview: {cardData.message}</p>
 
-      <div>
         <input
           type="submit"
-          value="Submit Card"
+          className="new-card-form__form-submit-btn"
+          value="Submit"
           disabled={isMessageEmpty}
         />
-      </div>
-    </form>
+      </form>
+    </section>
   );
 };
 
@@ -58,4 +54,3 @@ NewCardForm.propTypes = {
 };
 
 export default NewCardForm;
-

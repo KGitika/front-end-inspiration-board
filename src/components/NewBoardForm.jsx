@@ -2,105 +2,80 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import './NewBoardForm.css';
 
-
-// Initial empty board object used to reset the form
 const NEW_BOARD = {
   title: '',
   owner: '',
 };
 
 const NewBoardForm = ({ createNewBoard }) => {
-  const [boardData, setBoardData] = useState(NEW_BOARD);  // State to store form input values
-  const [formVisible, setFormVisible] = useState(true);  // State to store form input values
+  const [boardData, setBoardData] = useState(NEW_BOARD);
+  const [formVisible, setFormVisible] = useState(true);
 
-  // Handle form submission
   const handleSubmit = (e) => {
-    e.preventDefault();  
-
-    // Pass the board data to parent
+    e.preventDefault();
     createNewBoard(boardData);
-
     console.log('Submitting board:', boardData);
-
-    // Reset form
     setBoardData(NEW_BOARD);
   };
 
-
-  // Update state on input change
   const handleChange = (e) => {
     setBoardData({ ...boardData, [e.target.name]: e.target.value });
   };
 
-  function onShowHideBnt(){
+  const onShowHideBtn = () => {
     setFormVisible(!formVisible);
-  }
+  };
 
-  let form=(
-    <form onSubmit={handleSubmit} className="new-board-form">
+  const isFormValid = boardData.title.trim() !== '' && boardData.owner.trim() !== '';
+
+  return (
+    <section className="new-board-form__container">
       <h2>Create a New Board</h2>
-      <div>
-        <label htmlFor="add-title">Title:</label>
-        <input
-          id="add-title"
-          name="title"
-          type="text"
-          placeholder="Board Title"
-          value={boardData.title}
-          onChange={handleChange}
-        />
+      {formVisible && (
+        <form className="new-board-form__form" onSubmit={handleSubmit}>
+          <label htmlFor="add-title">Title</label>
+          <input
+            id="add-title"
+            name="title"
+            type="text"
+            className="invalid-form-input"
+            placeholder="Board Title"
+            value={boardData.title}
+            onChange={handleChange}
+          />
 
-      </div>
-      
-      <div>
-        <label htmlFor="add-owner">Owner's Name:</label>
-        <input
-          id="add-owner"
-          name="owner"
-          type="text"
-          value={boardData.owner}
-          onChange={handleChange}
-          placeholder="Enter owner name"
-        />
-      </div>
+          <label htmlFor="add-owner">Owner's Name</label>
+          <input
+            id="add-owner"
+            name="owner"
+            type="text"
+            className="invalid-form-input"
+            placeholder="Enter owner name"
+            value={boardData.owner}
+            onChange={handleChange}
+          />
 
-      <div>
-        <label>Preview:</label>
-        <input type="submit" value="submit" />
-      </div>
-    </form>
+          <p>Preview: {boardData.title} - {boardData.owner}</p>
+
+          <input
+            type="submit"
+            className="new-board-form__form-submit-btn"
+            disabled={!isFormValid}
+            value="Submit"
+          />
+        </form>
+      )}
+
+      <span
+        className="new-board-form__toggle-btn"
+        onClick={onShowHideBtn}
+        role="button"
+        style={{ cursor: 'pointer' }}
+      >
+        {formVisible ? 'Hide New Board Form' : 'Show New Board Form'}
+      </span>
+    </section>
   );
-
-  let msg=(formVisible?"Hide New Board Form":"Show New Board Form");
-
-  let button= 
-    (
-      <div>
-        <input
-          type="button"
-          value={msg}
-          onClick={onShowHideBnt}
-        />
-      </div>
-    );
-
-    if (formVisible){
-      return (
-        <>
-          {form}
-          {button}
-        </>
-      );   
-    }else {
-      return (
-        <>
-          {button}
-        </>
-      )
-    }
-
-
-
 };
 
 NewBoardForm.propTypes = {

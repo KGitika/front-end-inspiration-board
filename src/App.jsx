@@ -93,19 +93,30 @@ const createNewCard = (newCard) => {
             <h2>Selected Board:</h2> 
             <p>{selectedBoard?.title} - {selectedBoard?.owner}</p>
           </section>
-          <NewBoardForm createNewBoard={createNewBoard} />
+          <section className="new-board-form__container">
+             <NewBoardForm createNewBoard={createNewBoard} />
+          </section>
+         
         </section>
-      </div>
       
+      
+      <section className="cards__container">
+  {selectedBoard?.id && (
+    <>
+      <section className="cards-section">
+        <h2 className="cards-heading">Cards for {selectedBoard.title}</h2>
+        <CardList cards={selectedBoard?.cards || []} onLike={cardLike} />
+      </section>
 
-      {selectedBoard?.id && (
-        <>          
-          <NewCardForm createNewCard={createNewCard} />
-          <CardList cards={selectedBoard?.cards} onLike={cardLike} />
-        </>
-      )}
+      <NewCardForm createNewCard={createNewCard} />
+    </>
+  )}
+</section>
+      
+      
+    </div>
     </div>
   );
 }
 
-export default App
+export default App;
