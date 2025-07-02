@@ -68,6 +68,32 @@ function App() {
       .catch((error) => console.error("Error creating card:", error));
   };
 
+  const deleteCard = (card_id) => {
+  axios
+    .delete(`${BASE_URL}/cards/${card_id}`)
+    .then(() => {
+      const updatedCards = selectedBoard.cards.filter(
+        (card) => card.card_id !== card_id
+      );
+
+      const updatedBoards = boardsData.map((board) => {
+        if (board.id === selectedBoard.id) {
+          return { ...board, cards: updatedCards };
+        }
+        return board;
+      });
+
+      setBoardsData(updatedBoards);
+      setSelectedBoard((prevBoard) => ({
+        ...prevBoard,
+        cards: updatedCards,
+      }));
+    })
+    .catch((error) => {
+      console.error("Error deleting card:", error);
+    });
+};
+
   const cardLike = (card_id) => {
     //console.log("like",card_id);
     axios
@@ -118,6 +144,7 @@ function App() {
                 <CardList
                   cards={selectedBoard?.cards || []}
                   onLike={cardLike}
+                  onDelete={deleteCard}
                 />
               </section>
 
