@@ -1,10 +1,10 @@
-import { useState } from 'react';
-import PropTypes from 'prop-types';
-import './NewBoardForm.css';
+import { useState } from "react";
+import PropTypes from "prop-types";
+import "./NewBoardForm.css";
 
 const NEW_BOARD = {
-  title: '',
-  owner: '',
+  title: "",
+  owner: "",
 };
 
 const NewBoardForm = ({ createNewBoard }) => {
@@ -14,7 +14,7 @@ const NewBoardForm = ({ createNewBoard }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     createNewBoard(boardData);
-    console.log('Submitting board:', boardData);
+    console.log("Submitting board:", boardData);
     setBoardData(NEW_BOARD);
   };
 
@@ -26,7 +26,8 @@ const NewBoardForm = ({ createNewBoard }) => {
     setFormVisible(!formVisible);
   };
 
-  const isFormValid = boardData.title.trim() !== '' && boardData.owner.trim() !== '';
+  const isFormValid =
+    boardData.title.trim() !== "" && boardData.owner.trim() !== "";
 
   return (
     <section className="new-board-form__container">
@@ -55,7 +56,9 @@ const NewBoardForm = ({ createNewBoard }) => {
             onChange={handleChange}
           />
 
-          <p>Preview: {boardData.title} - {boardData.owner}</p>
+          <p>
+            Preview: {boardData.title} - {boardData.owner}
+          </p>
 
           <input
             type="submit"
@@ -70,9 +73,9 @@ const NewBoardForm = ({ createNewBoard }) => {
         className="new-board-form__toggle-btn"
         onClick={onShowHideBtn}
         role="button"
-        style={{ cursor: 'pointer' }}
+        style={{ cursor: "pointer" }}
       >
-        {formVisible ? 'Hide New Board Form' : 'Show New Board Form'}
+        {formVisible ? "Hide New Board Form" : "Show New Board Form"}
       </span>
     </section>
   );

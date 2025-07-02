@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import PropTypes from 'prop-types';
-import './NewCardForm.css';
+import { useState } from "react";
+import PropTypes from "prop-types";
+import "./NewCardForm.css";
 
 const NEW_CARD = {
-  message: '',
+  message: "",
 };
 
 const NewCardForm = ({ createNewCard }) => {
@@ -19,7 +19,7 @@ const NewCardForm = ({ createNewCard }) => {
     setCardData({ ...cardData, [e.target.name]: e.target.value });
   };
 
-  const isMessageEmpty = cardData.message.trim() === '';
+  const isMessageEmpty = cardData.message.trim() === "";
 
   return (
     <section className="new-card-form__container">

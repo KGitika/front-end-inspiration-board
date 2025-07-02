@@ -1,22 +1,27 @@
-import { useState, useEffect  } from 'react'
-import BoardList from './components/BoardList';
-import NewBoardForm from './components/NewBoardForm';
-import NewCardForm from './components/NewCardForm';
-import CardList from './components/CardList';
-import './App.css'
-import axios from 'axios';
+import { useState, useEffect } from "react";
+import BoardList from "./components/BoardList";
+import NewBoardForm from "./components/NewBoardForm";
+import NewCardForm from "./components/NewCardForm";
+import CardList from "./components/CardList";
+import "./App.css";
+import axios from "axios";
 
-const BASE_URL = 'http://localhost:5000';
+//const BASE_URL = "http://localhost:5000";
+const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL
 
 function App() {
-  const [boardsData, setBoardsData] = useState([]);  // State to hold all boards data
-  const [selectedBoard, setSelectedBoard] = useState({title:"Select a Board from the Board List!", owner:""});    //State to keep track of which board is currently selected
-  
+  const [boardsData, setBoardsData] = useState([]); // State to hold all boards data
+  const [selectedBoard, setSelectedBoard] = useState({
+    title: "Select a Board from the Board List!",
+    owner: "",
+  }); //State to keep track of which board is currently selected
+
   // Fetch boards when the component mounts
   useEffect(() => {
-    axios.get(`${BASE_URL}/boards`)
-      .then(response => setBoardsData(response.data.boards))
-      .catch(error => console.error('Error fetching boards:', error));
+    axios
+      .get(`${BASE_URL}/boards`)
+      .then((response) => setBoardsData(response.data.boards))
+      .catch((error) => console.error("Error fetching boards:", error));
   }, []);
 
   // Handle selecting a board
@@ -26,56 +31,59 @@ function App() {
 
   // Add a new board
   const createNewBoard = (newBoard) => {
-    axios.post(`${BASE_URL}/boards`, newBoard)
-      .then(response => {
+    axios
+      .post(`${BASE_URL}/boards`, newBoard)
+      .then((response) => {
         setBoardsData([...boardsData, response.data.board]);
       })
-      .catch(error => console.error('Error creating board:', error));
+      .catch((error) => console.error("Error creating board:", error));
   };
 
- // Add a new card
-const createNewCard = (newCard) => {
-  axios.post(`${BASE_URL}/boards/${selectedBoard.id}/cards`, newCard)
-    .then(response => {
-      const updatedCard = response.data.card;
+  // Add a new card
+  const createNewCard = (newCard) => {
+    axios
+      .post(`${BASE_URL}/boards/${selectedBoard.id}/cards`, newCard)
+      .then((response) => {
+        const updatedCard = response.data.card;
 
-      // Update boardsData array
-      const updatedBoards = boardsData.map((board) => {
-        if (board.id === selectedBoard.id) {
-          return {
-            ...board,
-            cards: [...board.cards, updatedCard],
-          };
-        }
-        return board;
-      });
+        // Update boardsData array
+        const updatedBoards = boardsData.map((board) => {
+          if (board.id === selectedBoard.id) {
+            return {
+              ...board,
+              cards: [...board.cards, updatedCard],
+            };
+          }
+          return board;
+        });
 
-      setBoardsData(updatedBoards);
+        setBoardsData(updatedBoards);
 
-      // Update the selectedBoard state with new card added
-      setSelectedBoard(prevBoard => ({
-        ...prevBoard,
-        cards: [...prevBoard.cards, updatedCard]
-      }));
-    })
-    .catch(error => console.error('Error creating card:', error));
-};
+        // Update the selectedBoard state with new card added
+        setSelectedBoard((prevBoard) => ({
+          ...prevBoard,
+          cards: [...prevBoard.cards, updatedCard],
+        }));
+      })
+      .catch((error) => console.error("Error creating card:", error));
+  };
 
-
-
-    const cardLike = (card_id) => {
-      //console.log("like",card_id);
-      axios.patch(`${BASE_URL}/cards/${card_id}/like`)
-        .then(response => {
-          //setBoardsData([...boardsData, response.data.board]);
-          console.log(response);
-          let updatedCard=response.data.card;
-          let board= boardsData.find((brd)=>brd.id==updatedCard.board_id);
-          let card=board.cards.find((crd)=>crd.card_id==updatedCard.card_id);
-          card.likes_count++;
-          setBoardsData([...boardsData]);
-        })
-        .catch(error => console.error('Error creating board:', error));      
+  const cardLike = (card_id) => {
+    //console.log("like",card_id);
+    axios
+      .patch(`${BASE_URL}/cards/${card_id}/like`)
+      .then((response) => {
+        //setBoardsData([...boardsData, response.data.board]);
+        console.log(response);
+        let updatedCard = response.data.card;
+        let board = boardsData.find((brd) => brd.id == updatedCard.board_id);
+        let card = board.cards.find(
+          (crd) => crd.card_id == updatedCard.card_id,
+        );
+        card.likes_count++;
+        setBoardsData([...boardsData]);
+      })
+      .catch((error) => console.error("Error creating board:", error));
   };
 
   return (
@@ -84,37 +92,40 @@ const createNewCard = (newCard) => {
         <h1>Inspiration Board</h1>
         <section className="boards__container">
           <section>
-          <h2>Boards</h2>
-            <BoardList className="boards__list"
-              boards={boardsData} onBoardSelect={handleBoardSelect} 
+            <h2>Boards</h2>
+            <BoardList
+              className="boards__list"
+              boards={boardsData}
+              onBoardSelect={handleBoardSelect}
             />
           </section>
           <section>
-            <h2>Selected Board:</h2> 
-            <p>{selectedBoard?.title} - {selectedBoard?.owner}</p>
+            <h2>Selected Board:</h2>
+            <p>
+              {selectedBoard?.title} - {selectedBoard?.owner}
+            </p>
           </section>
           <section className="new-board-form__container">
-             <NewBoardForm createNewBoard={createNewBoard} />
+            <NewBoardForm createNewBoard={createNewBoard} />
           </section>
-         
         </section>
-      
-      
-      <section className="cards__container">
-  {selectedBoard?.id && (
-    <>
-      <section className="cards-section">
-        <h2 className="cards-heading">Cards for {selectedBoard.title}</h2>
-        <CardList cards={selectedBoard?.cards || []} onLike={cardLike} />
-      </section>
 
-      <NewCardForm createNewCard={createNewCard} />
-    </>
-  )}
-</section>
-      
-      
-    </div>
+        <section className="cards__container">
+          {selectedBoard?.id && (
+            <>
+              <section>
+                <h2>Cards for {selectedBoard.title}</h2>
+                <CardList
+                  cards={selectedBoard?.cards || []}
+                  onLike={cardLike}
+                />
+              </section>
+
+              <NewCardForm createNewCard={createNewCard} />
+            </>
+          )}
+        </section>
+      </div>
     </div>
   );
 }

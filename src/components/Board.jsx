@@ -1,5 +1,5 @@
-import './Board.css';
-import PropTypes from 'prop-types';
+import "./Board.css";
+import PropTypes from "prop-types";
 
 const Board = ({ board, onBoardSelect }) => {
   return (
@@ -11,7 +11,7 @@ const Board = ({ board, onBoardSelect }) => {
 
 Board.propTypes = {
   board: PropTypes.shape({
-    id: PropTypes.number.isRequired,     
+    id: PropTypes.number.isRequired,
     title: PropTypes.string.isRequired,
     owner: PropTypes.string.isRequired,
   }).isRequired,
