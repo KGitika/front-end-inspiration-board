@@ -1,6 +1,5 @@
 import Card from "./Card";
 import PropTypes from "prop-types";
-import "./Card.css";
 
 const CardList = ({ cards, onLike, onDelete }) => {
     if (!cards || cards.length === 0) {

@@ -1,5 +1,4 @@
 import Board from "./Board.jsx";
-import "./BoardList.css";
 import PropTypes from "prop-types";
 
 const BoardList = ({ boards, onBoardSelect }) => {

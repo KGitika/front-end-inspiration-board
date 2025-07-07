@@ -6,7 +6,6 @@ import CardList from "./components/CardList";
 import "./App.css";
 import axios from "axios";
 
-//const BASE_URL = "http://localhost:5000";
 const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL
 
 function App() {
@@ -95,11 +94,9 @@ function App() {
 };
 
   const cardLike = (card_id) => {
-    //console.log("like",card_id);
     axios
       .patch(`${BASE_URL}/cards/${card_id}/like`)
       .then((response) => {
-        //setBoardsData([...boardsData, response.data.board]);
         console.log(response);
         let updatedCard = response.data.card;
         let board = boardsData.find((brd) => brd.id == updatedCard.board_id);
@@ -147,7 +144,6 @@ function App() {
                   onDelete={deleteCard}
                 />
               </section>
-
               <NewCardForm createNewCard={createNewCard} />
             </>
           )}
